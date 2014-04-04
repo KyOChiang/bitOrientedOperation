@@ -126,6 +126,94 @@ void test_btfss_should_not_check_bit_and_throw_exception_with_invalid_operand3_i
 	}
 }
 
+void test_btfss_should_not_skip_if_there_is_0_is_check_bit_location(){
+	CEXCEPTION_T operandERR;
+	
+	Bytecode code = {.instruction = {.mnemonic = BTFSS, .name = "btfss"},
+					 .operand1 = 0x12,
+					 .operand2 = 7,
+					 .operand3 = -1,
+					 .absoluteAddress = 0x22
+					 };			
+
+	FSR[code.operand1] = 0x7D; // 0111 1101
+	PC = code.absoluteAddress;
+	
+	Try{
+		btfss(&code);
+	}Catch(operandERR){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1,operandERR);
+	}
+	
+	TEST_ASSERT_EQUAL(0x24,PC);
+}
+
+void test_btfss_should_not_skip_if_there_is_1_is_check_bit_location(){
+	CEXCEPTION_T operandERR;
+	
+	Bytecode code = {.instruction = {.mnemonic = BTFSS, .name = "btfss"},
+					 .operand1 = 0x12,
+					 .operand2 = 5,
+					 .operand3 = -1,
+					 .absoluteAddress = 0x22
+					 };			
+
+	FSR[code.operand1] = 0x7D;
+	PC = code.absoluteAddress;
+	
+	Try{
+		btfss(&code);
+	}Catch(operandERR){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1,operandERR);
+	}
+	
+	TEST_ASSERT_EQUAL(0x26,PC);
+}
+
+void test_btfss_should_not_skip_if_there_is_1_is_bit_0_location(){
+	CEXCEPTION_T operandERR;
+	
+	Bytecode code = {.instruction = {.mnemonic = BTFSS, .name = "btfss"},
+					 .operand1 = 0x12,
+					 .operand2 = 0,
+					 .operand3 = -1,
+					 .absoluteAddress = 0x36
+					 };			
+
+	FSR[code.operand1] = 0x7D;
+	PC = code.absoluteAddress;
+	
+	Try{
+		btfss(&code);
+	}Catch(operandERR){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1,operandERR);
+	}
+	
+	TEST_ASSERT_EQUAL(0x3A,PC);
+}
+
+void test_btfss_should_not_skip_if_there_is_0_is_bit_1_location(){
+	CEXCEPTION_T operandERR;
+	
+	Bytecode code = {.instruction = {.mnemonic = BTFSS, .name = "btfss"},
+					 .operand1 = 0x12,
+					 .operand2 = 1,
+					 .operand3 = -1,
+					 .absoluteAddress = 0x3A
+					 };			
+
+	FSR[code.operand1] = 0x7D;
+	PC = code.absoluteAddress;
+	
+	Try{
+		btfss(&code);
+	}Catch(operandERR){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1,operandERR);
+	}
+	
+	TEST_ASSERT_EQUAL(0x3C,PC);
+}
+
 
 
 
